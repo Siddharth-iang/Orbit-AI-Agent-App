@@ -5,6 +5,8 @@ import { useEffect, useCallback } from 'react'
 import * as WebBrowser from 'expo-web-browser'
 import * as AuthSession from 'expo-auth-session'
 import { useSSO } from '@clerk/clerk-expo'
+import { firestoreDb } from '../config/firebaseConfig'
+import { setDoc, doc } from 'firebase/firestore'
 
 export const useWarmUpBrowser = () => {
   useEffect(() => {
@@ -28,7 +30,7 @@ export default function Index() {
 
   useEffect(() => {
     if (isSignedIn) {
-      router.replace('/home')
+      router.replace('/(tabs)/Home')
     }
   }, [isSignedIn])
 
@@ -48,7 +50,15 @@ export default function Index() {
         strategy: 'oauth_google',
         redirectUrl,
       })
-      console.log('SSO Flow completed, session:', createdSessionId)
+
+      if (signUp) {
+        await setDoc(doc(firestoreDb, 'users', signUp?.emailAddress ?? ''), {
+          email: signUp?.emailAddress,
+          name: signUp?.firstName + " " + signUp?.lastName,
+          joinDate: Date.now(),
+          credits: 30
+        })
+      }
 
       // If sign in was successful, set the active session
       if (createdSessionId) {
@@ -59,11 +69,11 @@ export default function Index() {
           navigate: async ({ session }) => {
             if (session?.currentTask) {
               console.log(session?.currentTask)
-              router.push('/home')
+              router.push('/(tabs)/Home')
               return
             }
 
-            router.push('/')
+            router.push('/(tabs)/Home')
           },
         })
       } else {

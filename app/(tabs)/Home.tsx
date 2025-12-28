@@ -1,10 +1,15 @@
-import { View, Text } from 'react-native'
+import { View, Text, ScrollView} from 'react-native'
 import React from 'react'
+import AgentListComponent from '@/components/Home/AgentListComponent'
+import AgentBanner from '@/components/Home/AgentBanner'
 
 export default function Home() {
     return (
-        <View>
-            <Text>Home dfghj</Text>
-        </View>
+        <ScrollView style={{padding:10}}>
+            <AgentListComponent isFeatured={true}/>
+            <AgentBanner/>
+            <AgentListComponent isFeatured={false}/>
+            <View style={{height:50}}/>
+        </ScrollView>
     )
 }

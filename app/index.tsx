@@ -19,7 +19,7 @@ export const useWarmUpBrowser = () => {
   }, [])
 }
 
-WebBrowser.maybeCompleteAuthSession()
+WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
   const router = useRouter()
